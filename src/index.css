@@ -1,0 +1,402 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Inter:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   THE IVORY VAULT — Luxury Antique Gallery
+   Warm cream light mode. Deep obsidian dark mode.
+   ============================================================ */
+
+@layer base {
+  :root {
+    /* Warm cream palette — light mode */
+    --background: 33 35% 95%;          /* #F5EFE6 warm cream */
+    --foreground: 20 16% 10%;          /* #1C1714 deep charcoal */
+
+    --card: 35 30% 91%;                /* #EDE5D8 slightly darker cream */
+    --card-foreground: 20 16% 10%;
+
+    --popover: 33 35% 96%;
+    --popover-foreground: 20 16% 10%;
+
+    --primary: 38 52% 60%;             /* #C6A96B antique gold */
+    --primary-foreground: 20 16% 5%;
+
+    --secondary: 33 28% 88%;           /* warm beige */
+    --secondary-foreground: 20 16% 12%;
+
+    --muted: 34 22% 90%;
+    --muted-foreground: 22 14% 42%;    /* #6B5E4A warm brown */
+
+    --accent: 35 28% 82%;
+    --accent-foreground: 20 16% 10%;
+
+    --destructive: 0 65% 45%;
+    --destructive-foreground: 33 35% 95%;
+
+    --border: 34 18% 82%;
+    --input: 34 18% 82%;
+    --ring: 38 52% 60%;
+
+    /* Brand tokens */
+    --gold: 38 52% 60%;                /* #C6A96B */
+    --gold-soft: 38 40% 74%;
+    --bronze: 25 28% 42%;
+    --hairline: 34 20% 78%;
+    --cream-dark: 33 28% 88%;
+
+    --radius: 0rem;                    /* Sharp corners — no border radius */
+
+    --shadow-card: 0 2px 0 0 hsl(34 18% 82%), 0 20px 48px -16px hsl(20 16% 8% / 0.12);
+    --shadow-elevated: 0 24px 64px -12px hsl(20 16% 8% / 0.18);
+    --transition-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --transition-slow: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+    --sidebar-background: 33 35% 95%;
+    --sidebar-foreground: 20 16% 10%;
+    --sidebar-primary: 38 52% 60%;
+    --sidebar-primary-foreground: 20 16% 5%;
+    --sidebar-accent: 33 28% 88%;
+    --sidebar-accent-foreground: 20 16% 10%;
+    --sidebar-border: 34 18% 82%;
+    --sidebar-ring: 38 52% 60%;
+  }
+
+  .dark {
+    /* Deep obsidian palette — dark mode */
+    --background: 20 16% 5%;           /* #0E0B09 obsidian */
+    --foreground: 33 30% 92%;          /* #F0E8DC warm white */
+
+    --card: 20 14% 8%;                 /* #141110 */
+    --card-foreground: 33 30% 92%;
+
+    --popover: 20 16% 6%;
+    --popover-foreground: 33 30% 92%;
+
+    --primary: 38 46% 58%;             /* warm candle gold */
+    --primary-foreground: 20 16% 5%;
+
+    --secondary: 20 12% 12%;
+    --secondary-foreground: 33 30% 92%;
+
+    --muted: 20 12% 11%;
+    --muted-foreground: 30 14% 52%;
+
+    --accent: 20 14% 16%;
+    --accent-foreground: 33 30% 92%;
+
+    --destructive: 0 58% 52%;
+    --destructive-foreground: 33 30% 92%;
+
+    --border: 20 12% 16%;
+    --input: 20 12% 16%;
+    --ring: 38 46% 58%;
+
+    --gold: 38 46% 58%;
+    --gold-soft: 38 34% 46%;
+    --bronze: 25 24% 48%;
+    --hairline: 20 14% 20%;
+    --cream-dark: 20 12% 12%;
+
+    --shadow-card: 0 2px 0 0 hsl(20 14% 16%), 0 20px 48px -16px hsl(0 0% 0% / 0.5);
+    --shadow-elevated: 0 24px 64px -12px hsl(0 0% 0% / 0.7);
+
+    --sidebar-background: 20 16% 5%;
+    --sidebar-foreground: 33 30% 92%;
+    --sidebar-primary: 38 46% 58%;
+    --sidebar-primary-foreground: 20 16% 5%;
+    --sidebar-accent: 20 12% 12%;
+    --sidebar-accent-foreground: 33 30% 92%;
+    --sidebar-border: 20 12% 16%;
+    --sidebar-ring: 38 46% 58%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+     font-family: 'Satoshi', 'Inter', system-ui, sans-serif;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.7;
+  }
+
+  /* Tighter, sharper headings */
+h1, h2, h3, h4, h5 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+  ::selection {
+    background: hsl(38 52% 60% / 0.25);
+    color: hsl(var(--foreground));
+  }
+
+  /* Remove default input/button radius */
+  input, button, a {
+    border-radius: 0 !important;
+  }
+}
+
+@layer components {
+
+  /* ── Typography ──────────────────────────────────────── */
+
+  .eyebrow {
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+    font-size: 10px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.28em;
+    color: hsl(var(--muted-foreground));
+  }
+
+  .eyebrow-gold {
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.28em;
+    color: hsl(var(--gold));
+  }
+
+  /* ── Lines & Dividers ─────────────────────────────────── */
+
+  .hairline {
+    height: 1px;
+    width: 100%;
+    background: linear-gradient(90deg, transparent, hsl(var(--gold) / 0.4), transparent);
+  }
+
+  .hairline-left {
+    background: linear-gradient(90deg, hsl(var(--gold) / 0.5), transparent);
+  }
+
+  /* ── Image containers ─────────────────────────────────── */
+
+  /* Museum-style: object-contain with padding on muted bg */
+  .img-museum {
+    background: hsl(var(--card));
+    padding: 1.5rem;
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Archive item hover */
+  .img-archive {
+    transition: transform 700ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+  .group:hover .img-archive {
+    transform: scale(1.04);
+  }
+
+  /* ── Cards ────────────────────────────────────────────── */
+
+  .placard {
+    box-shadow: var(--shadow-card);
+    transition: box-shadow 0.4s var(--transition-smooth);
+  }
+  .placard:hover {
+    box-shadow: var(--shadow-elevated);
+  }
+
+  /* ── Links & Hover ────────────────────────────────────── */
+
+  /* Gold underline slide-in on hover */
+  .spotlight-link {
+    position: relative;
+    display: inline-block;
+  }
+  .spotlight-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    height: 1px;
+    width: 100%;
+    background: hsl(var(--gold));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+  .spotlight-link:hover::after {
+    transform: scaleX(1);
+  }
+
+  /* ── Gold accent ring ─────────────────────────────────── */
+
+  .ring-gold {
+    outline: 1px solid hsl(var(--gold) / 0.3);
+    outline-offset: 0px;
+    transition: outline-color 0.3s ease;
+  }
+  .ring-gold:hover {
+    outline-color: hsl(var(--gold) / 0.7);
+  }
+
+  /* ── Vertical text ────────────────────────────────────── */
+
+  .vertical-rl {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+  }
+
+  /* ── Drop cap ─────────────────────────────────────────── */
+
+  .dropcap::first-letter {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 5.5rem;
+    line-height: 0.85;
+    float: left;
+    padding-right: 0.75rem;
+    padding-top: 0.25rem;
+    color: hsl(var(--gold));
+  }
+
+  /* ── Animations ───────────────────────────────────────── */
+
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes kenBurns {
+    0% { transform: scale(1.0) translate(0, 0); }
+    100% { transform: scale(1.06) translate(-1%, -0.5%); }
+  }
+
+  @keyframes softPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.55; }
+  }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  .reveal {
+    animation: fadeUp 0.85s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  }
+
+  .ken-burns {
+    animation: kenBurns 16s ease-in-out infinite alternate;
+  }
+}
+
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeUp 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  }
+
+  .animate-soft-pulse {
+    animation: softPulse 3s ease-in-out infinite;
+  }
+
+  /* Precise line clamps */
+  .line-clamp-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  }
+
+  .line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .line-clamp-3 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+
+  /* Tight text — for editorial use */
+  .text-tight {
+    letter-spacing: -0.025em;
+  }
+
+  /* Extra mono tracking */
+  .tracking-editorial {
+    letter-spacing: 0.28em;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   REDUCED MOTION
+   ═══════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   RESPONSIVE TYPE — fluid scale
+   ═══════════════════════════════════════════════════════════ */
+
+@media (max-width: 640px) {
+  body { font-size: 14px; }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  body { font-size: 15px; }
+}
+
+@media (min-width: 1025px) {
+  body { font-size: 16px; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SCROLLBAR — subtle, branded
+   ═══════════════════════════════════════════════════════════ */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--background));
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--gold) / 0.35);
+  border-radius: 0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--gold) / 0.6);
+}
