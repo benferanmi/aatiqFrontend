@@ -22,6 +22,7 @@ export default function Products() {
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
   const [showEraDropdown, setShowEraDropdown] = useState(false);
   const [showSortDropdown, setShowSortDropdown] = useState(false);
+  const [gridCols, setGridCols] = useState<1 | 2 | 3 | 4 | 6>(4);
 
   // Fetch filter options
   const { data: categories } = useCategories();
@@ -75,6 +76,7 @@ export default function Products() {
   const handleCategoryChange = (catId: string | null) => {
     set("categoryId", catId);
     setPage(1);
+    setShowFilterPanel(false);
   };
 
   const handleAgeRangeToggle = (ageId: string) => {
@@ -84,6 +86,7 @@ export default function Products() {
       : [...current, ageId];
     set("ageRangeIds", next);
     setPage(1);
+    setShowFilterPanel(false);
   };
 
   const handleSortChange = (sortValue: SortOption) => {
@@ -139,53 +142,164 @@ export default function Products() {
       </section>
 
       {/* ═══════════════════════════════════════
+          BACKDROP OVERLAY (Mobile only)
+      ═══════════════════════════════════════ */}
+      {showFilterPanel && (
+        <div
+          className="fixed inset-0 bg-black/30 z-30 md:hidden"
+          onClick={() => setShowFilterPanel(false)}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* ═══════════════════════════════════════
           COMPACT STICKY FILTER BAR
       ═══════════════════════════════════════ */}
       <div className="sticky top-0 bg-background/95 backdrop-blur-sm border-b border-hairline/50 z-40">
         <div className="container py-3 md:py-4">
-          {/* Main filter row — compact */}
-          <div className="flex items-center justify-between gap-3 md:gap-4">
-            {/* Filter toggle button */}
-            <button
-              onClick={() => setShowFilterPanel(!showFilterPanel)}
-              className={cn(
-                "flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest border px-3 py-2 transition-all duration-300 whitespace-nowrap",
-                showFilterPanel
-                  ? "border-gold bg-gold/10 text-gold"
-                  : "border-hairline hover:border-gold hover:text-gold",
-              )}
-            >
-              <span>Filters</span>
-              {hasActiveFilters && (
-                <span className="ml-1 inline-flex items-center justify-center w-5 h-5 bg-gold/20 rounded-full text-[9px]">
-                  ✓
-                </span>
-              )}
-              <ChevronDown
+          {/* Main filter row — 2 rows on mobile */}
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-4">
+            {/* Top row: Filters + Active summary */}
+            <div className="flex items-center gap-2 md:gap-0">
+              {/* Filter toggle button */}
+              <button
+                onClick={() => setShowFilterPanel(!showFilterPanel)}
                 className={cn(
-                  "h-3.5 w-3.5 transition-transform duration-300",
-                  showFilterPanel && "rotate-180",
+                  "flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest border px-3 py-2 transition-all duration-300 whitespace-nowrap",
+                  showFilterPanel
+                    ? "border-gold bg-gold/10 text-gold"
+                    : "border-hairline hover:border-gold hover:text-gold",
                 )}
-                strokeWidth={1.5}
-              />
-            </button>
-
-            {/* Active filters summary (compact) */}
-            {hasActiveFilters && (
-              <div className="hidden md:flex items-center gap-2 text-xs uppercase tracking-widest text-muted-foreground">
-                {activeCategoryName && (
-                  <span className="truncate">{activeCategoryName}</span>
-                )}
-                {activeEraCount > 0 && (
-                  <span className="truncate">
-                    {activeEraCount} era{activeEraCount > 1 ? "s" : ""}
+              >
+                <span>Filters</span>
+                {hasActiveFilters && (
+                  <span className="ml-1 inline-flex items-center justify-center w-5 h-5 bg-gold/20 rounded-full text-[9px]">
+                    ✓
                   </span>
                 )}
-              </div>
-            )}
+                <ChevronDown
+                  className={cn(
+                    "h-3.5 w-3.5 transition-transform duration-300",
+                    showFilterPanel && "rotate-180",
+                  )}
+                  strokeWidth={1.5}
+                />
+              </button>
 
-            {/* Right controls */}
-            <div className="flex items-center gap-2 ml-auto">
+              {/* Active filters summary (hidden on mobile) */}
+              {hasActiveFilters && (
+                <div className="hidden md:flex items-center gap-2 text-xs uppercase tracking-widest text-muted-foreground ml-4">
+                  {activeCategoryName && (
+                    <span className="truncate">{activeCategoryName}</span>
+                  )}
+                  {activeEraCount > 0 && (
+                    <span className="truncate">
+                      {activeEraCount} era{activeEraCount > 1 ? "s" : ""}
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Right controls - Bottom row on mobile */}
+            <div className="flex items-center gap-2 ml-auto md:ml-0">
+              {/* View toggle - MOBILE ONLY */}
+              {/* View toggle - MOBILE ONLY (1 & 2 col) */}
+              <div className="md:hidden flex items-center border border-hairline rounded-none">
+                <button
+                  onClick={() => setGridCols(1)}
+                  className={cn(
+                    "px-3 py-2 font-mono text-[10px] uppercase tracking-widest transition-colors duration-300 border-r border-hairline",
+                    gridCols === 1
+                      ? "bg-gold/10 text-gold border-gold"
+                      : "text-foreground/60",
+                  )}
+                  title="1-column view"
+                >
+                  ☰
+                </button>
+                <button
+                  onClick={() => setGridCols(2)}
+                  className={cn(
+                    "px-3 py-2 font-mono text-[10px] uppercase tracking-widest transition-colors duration-300",
+                    gridCols === 2
+                      ? "bg-gold/10 text-gold"
+                      : "text-foreground/60",
+                  )}
+                  title="2-column view"
+                >
+                  ⊞⊞
+                </button>
+              </div>
+
+              {/* View toggle - TABLET ONLY (2 & 3 col) */}
+              <div className="hidden md:flex lg:hidden items-center border border-hairline rounded-none">
+                <button
+                  onClick={() => setGridCols(2)}
+                  className={cn(
+                    "px-3 py-2 font-mono text-[10px] uppercase tracking-widest transition-colors duration-300 border-r border-hairline",
+                    gridCols === 2
+                      ? "bg-gold/10 text-gold border-gold"
+                      : "text-foreground/60",
+                  )}
+                  title="2-column view"
+                >
+                  ⊞⊞
+                </button>
+                <button
+                  onClick={() => setGridCols(3)}
+                  className={cn(
+                    "px-3 py-2 font-mono text-[10px] uppercase tracking-widest transition-colors duration-300",
+                    gridCols === 3
+                      ? "bg-gold/10 text-gold"
+                      : "text-foreground/60",
+                  )}
+                  title="3-column view"
+                >
+                  ⊞⊞⊞
+                </button>
+              </div>
+
+              {/* View toggle - DESKTOP ONLY (2, 4 & 6 col) */}
+              <div className="hidden lg:flex items-center border border-hairline rounded-none">
+                <button
+                  onClick={() => setGridCols(2)}
+                  className={cn(
+                    "px-3 py-2 font-mono text-[10px] uppercase tracking-widest transition-colors duration-300 border-r border-hairline",
+                    gridCols === 2
+                      ? "bg-gold/10 text-gold border-gold"
+                      : "text-foreground/60",
+                  )}
+                  title="2-column view"
+                >
+                  ⊞⊞
+                </button>
+                <button
+                  onClick={() => setGridCols(4)}
+                  className={cn(
+                    "px-3 py-2 font-mono text-[10px] uppercase tracking-widest transition-colors duration-300 border-r border-hairline",
+                    gridCols === 4
+                      ? "bg-gold/10 text-gold border-gold"
+                      : "text-foreground/60",
+                  )}
+                  title="4-column view"
+                >
+                  ⊞⊞⊞⊞
+                </button>
+                <button
+                  onClick={() => setGridCols(6)}
+                  className={cn(
+                    "px-3 py-2 font-mono text-[10px] uppercase tracking-widest transition-colors duration-300",
+                    gridCols === 6
+                      ? "bg-gold/10 text-gold"
+                      : "text-foreground/60",
+                  )}
+                  title="6-column view"
+                >
+                  ⊞⊞⊞⊞⊞⊞
+                </button>
+              </div>
+
               {/* Sort dropdown */}
               <div className="relative">
                 <button
@@ -200,11 +314,13 @@ export default function Products() {
                 </button>
 
                 {showSortDropdown && (
-                  <div className="absolute right-0 top-full mt-1 bg-background border border-hairline shadow-lg min-w-[180px]">
+                  <div className="absolute right-0 top-full mt-1 bg-background border border-hairline shadow-lg min-w-[180px] z-50">
                     {sortOptions.map((option) => (
                       <button
                         key={option.value}
-                        onClick={() => handleSortChange(option.value as SortOption)}
+                        onClick={() =>
+                          handleSortChange(option.value as SortOption)
+                        }
                         className={cn(
                           "block w-full text-left px-3 py-2 font-mono text-xs uppercase tracking-widest transition-colors duration-200 border-b border-hairline/50 last:border-b-0",
                           filters.sort === option.value
@@ -232,9 +348,29 @@ export default function Products() {
             </div>
           </div>
 
-          {/* Expanded filter panel */}
+          {/* Expanded filter panel - Mobile: fixed overlay, Desktop: inline */}
           {showFilterPanel && (
-            <div className="mt-4 pt-4 border-t border-hairline/50 space-y-4">
+            <div
+              className={cn(
+                "md:mt-4 md:pt-4 md:border-t md:border-hairline/50 md:space-y-4",
+                // Mobile styles: fixed positioned overlay
+                "md:relative md:border-0 md:mt-0 md:pt-0",
+                "fixed md:static left-0 right-0 md:left-auto md:right-auto top-auto md:top-auto bottom-0 md:bottom-auto max-h-[80vh] md:max-h-none overflow-y-auto md:overflow-visible bg-background md:bg-transparent rounded-t-lg md:rounded-none pt-6 md:pt-0 pb-6 md:pb-0 px-4 md:px-0 space-y-4 md:space-y-4",
+              )}
+            >
+              {/* Mobile close button */}
+              <div className="flex items-center justify-between md:hidden pb-3 border-b border-hairline/50">
+                <p className="font-mono text-[11px] uppercase tracking-widest">
+                  Filters
+                </p>
+                <button
+                  onClick={() => setShowFilterPanel(false)}
+                  className="p-1 text-muted-foreground hover:text-foreground"
+                >
+                  <X className="h-4 w-4" strokeWidth={2} />
+                </button>
+              </div>
+
               {/* Categories */}
               <div className="space-y-2">
                 <p className="eyebrow text-muted-foreground text-[9px]">
@@ -334,12 +470,20 @@ export default function Products() {
 
         {!isLoading && data && data.products.length > 0 && (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12">
+            <div
+              className={cn(
+                "grid gap-x-6 gap-y-12",
+                gridCols === 1 && "grid-cols-1",
+                gridCols === 2 && "grid-cols-2",
+                gridCols === 3 && "grid-cols-3",
+                gridCols === 4 && "grid-cols-4",
+                gridCols === 6 && "grid-cols-6",
+              )}
+            >
               {data.products.map((p, i) => (
                 <ProductCard key={p._id} product={p} index={i} />
               ))}
             </div>
-
             <Pagination
               page={data.pagination.page}
               totalPages={data.pagination.totalPages}

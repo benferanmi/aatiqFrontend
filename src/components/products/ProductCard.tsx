@@ -78,7 +78,7 @@ export default function ProductCard({
       <div className="pt-4 flex items-start justify-between gap-4">
         <div className="min-w-0 flex-1">
           {/* Category + era */}
-          <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+          <p className="font-mono text-[10px] md:text-xs uppercase tracking-widest text-muted-foreground">
             {product.categoryId ? product.categoryName : "Uncategorized"}
             {product.ageRangeId && ` · ${product.ageRangeLabel || ""}`}
           </p>
@@ -86,7 +86,7 @@ export default function ProductCard({
           {/* Title */}
           <h3
             className={cn(
-              "mt-1 font-display leading-tight group-hover:text-gold transition-colors duration-300",
+              "mt-1 font-display leading-tight group-hover:text-gold transition-colors duration-300 line-clamp-2",
               size === "large" ? "text-2xl md:text-3xl" : "text-lg md:text-xl",
             )}
           >

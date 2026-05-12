@@ -4,6 +4,8 @@ import { useFeatured, useHighlights } from "@/hooks/useApi";
 import { archiveNumber } from "@/lib/helpers";
 import Seo from "@/components/seo/Seo";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import CategoryAgeGateway from "@/components/gateway/CategoryAgeGateway";
+import { cn } from "@/lib/utils";
 
 // Antique-appropriate hero slides — dark, moody, museum-grade imagery
 const HERO_SLIDES = [
@@ -38,6 +40,7 @@ export default function Home() {
   const { data: highlights, isLoading: highlightsLoading } = useHighlights();
   const [slide, setSlide] = useState(0);
   const [transitioning, setTransitioning] = useState(false);
+  const [mobileViewMode, setMobileViewMode] = useState<"2col" | "1col">("2col");
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -204,8 +207,7 @@ export default function Home() {
           <p className="font-mono test-[12px] uppercase tracking-[0.2em] text-[#0F0F0F]/70">
             Islamic · Mughal · Persian · Pre-Islamic · Numismatic
           </p>
-          <p className="font-mono test-[12px] uppercase tracking-[0.2em] text-[#0F0F0F]/70 hidden md:block">
-          </p>
+          <p className="font-mono test-[12px] uppercase tracking-[0.2em] text-[#0F0F0F]/70 hidden md:block"></p>
         </div>
       </div>
 
@@ -213,9 +215,11 @@ export default function Home() {
           FEATURED — Asymmetric editorial layout
           ═══════════════════════════════════════════════════════════ */}
       {featured && featured.length > 0 && (
-        <section className="py-28 md:py-40">
+        <section className="py-10 md:py-40 hidden md:block">
           <div className="container mx-auto px-6 md:px-10">
             {/* Header */}
+            {/* Header */}
+
             <div className="flex items-end justify-between mb-16 md:mb-24 border-b border-[#C6A96B]/20 pb-8">
               <div className="space-y-3">
                 <p className="font-mono text-sm uppercase tracking-[0.2em] text-[#966c13]">
@@ -228,6 +232,9 @@ export default function Home() {
                   Carefully Selected
                 </h2>
               </div>
+
+            
+
               <Link
                 to="/products"
                 className="hidden md:inline-flex items-center gap-2 font-mono test-[12px] uppercase tracking-[0.25em] text-foreground/60 hover:text-[#C6A96B] transition-colors group"
@@ -238,6 +245,14 @@ export default function Home() {
                   strokeWidth={1.5}
                 />
               </Link>
+            </div>
+
+            {/* Category & Age Gateway */}
+            <div className="mt-8">
+              <p className="font-mono text-xs uppercase tracking-[0.2em] text-foreground/50 mb-5">
+                Explore by discipline & era
+              </p>
+              <CategoryAgeGateway />
             </div>
 
             {/* Asymmetric grid: 1 large left + 2 stacked right */}
@@ -278,7 +293,7 @@ export default function Home() {
                     </p>
                   </div>
                 </Link>
-{/* who knows */}
+                {/* who knows */}
                 {/* 2 stacked — col 8-12 */}
                 <div className="md:col-span-5 flex flex-col gap-6 md:gap-8">
                   {[featured[1], featured[2]].map(
@@ -418,10 +433,98 @@ export default function Home() {
         </section>
       )}
 
+      {/* Mobile-only Featured Section */}
+      {featured && featured.length > 0 && (
+        <section className="md:hidden py-10">
+          <div className="container mx-auto px-6 md:px-10">
+            {/* Header */}
+            <div className="flex items-end justify-between mb-8 border-b border-[#C6A96B]/20 pb-6">
+              <div className="space-y-2">
+                <p className="font-mono text-xs uppercase tracking-[0.2em] text-[#966c13]">
+                  — Featured Pieces
+                </p>
+                <h2 className="font-display text-2xl leading-tight">
+                  Carefully Selected
+                </h2>
+              </div>
+
+              {/* View toggle */}
+              <div className="flex items-center border border-[#C6A96B]/20">
+                <button
+                  onClick={() => setMobileViewMode("2col")}
+                  className={cn(
+                    "px-3 py-2 font-mono text-[10px] uppercase tracking-widest transition-colors duration-300 border-r border-[#C6A96B]/20",
+                    mobileViewMode === "2col"
+                      ? "bg-[#C6A96B]/10 text-[#C6A96B]"
+                      : "text-foreground/60",
+                  )}
+                >
+                  ⊞⊞
+                </button>
+                <button
+                  onClick={() => setMobileViewMode("1col")}
+                  className={cn(
+                    "px-3 py-2 font-mono text-[10px] uppercase tracking-widest transition-colors duration-300",
+                    mobileViewMode === "1col"
+                      ? "bg-[#C6A96B]/10 text-[#C6A96B]"
+                      : "text-foreground/60",
+                  )}
+                >
+                  ☰
+                </button>
+              </div>
+            </div>
+
+            {/* Grid responds to toggle */}
+            <div
+              className={cn(
+                "grid gap-6",
+                mobileViewMode === "1col" ? "grid-cols-1" : "grid-cols-2",
+              )}
+            >
+              {featured.map((product) => (
+                <Link
+                  key={product._id}
+                  to={`/products/${product.slug}`}
+                  className="group"
+                >
+                  <div className="relative aspect-[4/5] overflow-hidden bg-[#EDE5D8] mb-3 ring-1 ring-[#C6A96B]/15 group-hover:ring-[#C6A96B]/50 transition-all duration-500">
+                    {product.images?.[0]?.url && (
+                      <img
+                        src={product.images[0].url}
+                        alt={product.title}
+                        loading="lazy"
+                        className="absolute inset-0 h-full w-full object-contain p-3 transition-transform duration-700 group-hover:scale-[1.04]"
+                      />
+                    )}
+                    <div className="absolute top-2 left-2 bg-[#0F0F0F] px-2 py-1">
+                      <p className="font-mono text-[8px] uppercase tracking-[0.2em] text-[#C6A96B]">
+                        {archiveNumber(product.itemNumber)}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="space-y-1 pl-1">
+                    <p className="font-mono text-[9px] uppercase tracking-[0.15em] text-foreground/60">
+                      {product.ageRangeLabel || product.categoryName}
+                    </p>
+                    <h3 className="font-display text-sm leading-snug group-hover:text-[#C6A96B] transition-colors duration-300 line-clamp-2">
+                      {product.title}
+                    </h3>
+                    <p className="font-mono text-[9px] text-foreground/70">
+                      {product.priceDisplay}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* ═══════════════════════════════════════════════════════════
           STORY — Dark editorial section
           ═══════════════════════════════════════════════════════════ */}
-      <section className="bg-[#0F0F0F] py-28 md:py-40 relative overflow-hidden">
+      <section className="bg-[#0F0F0F] py-12 md:py-40 relative overflow-hidden">
         {/* Subtle texture */}
         <div
           className="absolute inset-0 opacity-[0.03]"
@@ -511,9 +614,10 @@ export default function Home() {
       {/* ═══════════════════════════════════════════════════════════
           MUSEUM HIGHLIGHTS — Dark grid with gold accents
           ═══════════════════════════════════════════════════════════ */}
-      {highlights && highlights.length > 0 && (
-        <section className="py-28 md:py-40 bg-[#F5EFE6]">
+       {highlights && highlights.length > 0 && (
+        <section className="py-15 md:py-40 bg-[#F5EFE6] dark:bg-[#0F0F0F]">
           <div className="container mx-auto px-6 md:px-10">
+            {/* Header */}
             {/* Header */}
             <div className="mb-16 md:mb-24 flex items-end justify-between">
               <div className="space-y-3">
@@ -527,10 +631,36 @@ export default function Home() {
                   Museum Highlights
                 </h2>
               </div>
+
+              {/* Mobile-only view toggle */}
+              <div className="lg:hidden flex items-center border border-[#C6A96B]/20 rounded-none">
+                <button
+                  onClick={() => setMobileViewMode("2col")}
+                  className={cn(
+                    "px-3 py-2 font-mono text-[10px] uppercase tracking-widest transition-colors duration-300 border-r border-[#C6A96B]/20",
+                    mobileViewMode === "2col"
+                      ? "bg-[#C6A96B]/10 text-[#C6A96B]"
+                      : "text-foreground/60",
+                  )}
+                >
+                  ⊞⊞
+                </button>
+                <button
+                  onClick={() => setMobileViewMode("1col")}
+                  className={cn(
+                    "px-3 py-2 font-mono text-[10px] uppercase tracking-widest transition-colors duration-300",
+                    mobileViewMode === "1col"
+                      ? "bg-[#C6A96B]/10 text-[#C6A96B]"
+                      : "text-foreground/60",
+                  )}
+                >
+                  ☰
+                </button>
+              </div>
             </div>
 
             {/* 2x2 grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
+            <div className="hidden lg:grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
               {highlights.slice(0, 4).map((product, i) => (
                 <Link
                   key={product._id}
@@ -575,6 +705,51 @@ export default function Home() {
                 </Link>
               ))}
             </div>
+
+            {/* Mobile-only grid - hidden on lg and up */}
+            {highlights && highlights.length > 0 && (
+              <div
+                className={cn(
+                  "lg:hidden grid gap-8 md:gap-10",
+                  mobileViewMode === "2col" ? "grid-cols-2" : "grid-cols-1",
+                )}
+              >
+                {highlights.map((product, i) => (
+                  <Link
+                    key={product._id}
+                    to={`/products/${product.slug}`}
+                    className="group"
+                  >
+                    <div className="relative aspect-[5/4] overflow-hidden bg-[#1C1714] mb-4 ring-1 ring-[#C6A96B]/20 group-hover:ring-[#C6A96B]/60 transition-all duration-500">
+                      {product.images?.[0]?.url && (
+                        <img
+                          src={product.images[0].url}
+                          alt={product.title}
+                          loading="lazy"
+                          className="absolute inset-0 h-full w-full object-contain p-6 transition-transform duration-700 group-hover:scale-[1.04] opacity-90 group-hover:opacity-100"
+                        />
+                      )}
+                      <div className="absolute bottom-3 right-3">
+                        <p className="font-mono text-[8px] uppercase tracking-[0.2em] text-[#C6A96B]/60">
+                          {archiveNumber(product.itemNumber)}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="space-y-1.5 pl-1">
+                      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-foreground/60">
+                        {product.ageRangeLabel || product.categoryName}
+                      </p>
+                      <h3 className="font-display text-base md:text-lg leading-snug group-hover:text-[#C6A96B] transition-colors duration-300">
+                        {product.title}
+                      </h3>
+                      <p className="font-mono text-[10px] text-foreground/70">
+                        {product.priceDisplay}
+                      </p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
         </section>
       )}

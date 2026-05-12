@@ -86,7 +86,7 @@ export default function Category() {
           Design principle: Composition over filters.
           Text placed strategically, image fully visible.
       ═══════════════════════════════════════ */}
-      <section className="relative h-[80vh] min-h-[540px] md:h-screen max-h-[900px] mt-16 md:mt-10 overflow-hidden">
+      <section className="relative h-fit min-h-[540px] md:h-screen max-h-[900px] mt-20 md:mt-10 overflow-hidden">
         {/* Background image — pristine, unfiltered */}
         {category.image ? (
           <img
@@ -103,14 +103,14 @@ export default function Category() {
         <div className="absolute inset-0 flex flex-col justify-end container pb-14 md:pb-20">
           {/* Breadcrumb — subtle semi-transparent backdrop, minimal intervention */}
           <div className="mb-8 inline-flex">
-            <div className="bg-black/20 backdrop-blur-sm rounded-sm px-4 py-2.5 border border-white/10">
+            <div className="bg-black/40 backdrop-blur-sm rounded-sm px-4 py-2.5 border border-white/20">
               <Breadcrumbs
                 items={[
                   { label: "Collections", to: "/categories" },
                   { label: category.name },
                 ]}
-                textColor="text-background/90"
-                hoverColor="text-primary"
+                textColor="text-white/90"
+                hoverColor="text-gold"
               />
             </div>
           </div>
@@ -124,7 +124,7 @@ export default function Category() {
 
             {/* Headline — strong, serif, no apologies */}
             <h1
-              className="font-display text-[clamp(3rem,7vw,5.5rem)] text-white leading-[0.92] tracking-tight whitespace-pre-line animate-fade-in"
+              className="font-display text-[clamp(3rem,7vw,5.5rem)] text-white leading-[0.92] line-clamp-3 tracking-tight whitespace-pre-line animate-fade-in"
               style={{ animationDelay: "0.1s" }}
             >
               {heroConf.tagline}

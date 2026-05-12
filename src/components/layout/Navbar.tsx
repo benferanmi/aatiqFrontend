@@ -13,6 +13,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [collectionsOpen, setCollectionsOpen] = useState(false);
   const [mobileCollectionsOpen, setMobileCollectionsOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const location = useLocation();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -56,23 +57,46 @@ export default function Navbar() {
           : "bg-[#F5EFE6] dark:bg-[#0F0F0F] border-b border-[#C6A96B]/20",
       )}
     >
-      <div className="container flex h-16 md:h-20 items-center justify-between">
-        {/* Logo */}
-        <Link to="/" className="flex items-baseline gap-2.5 group shrink-0">
+      <div className="container flex h-16 md:h-20 items-center justify-between px-4 md:px-6">
+        {/* Left: Hamburger Menu (mobile only) */}
+        <button
+          onClick={() => setMobileOpen((v) => !v)}
+          className={cn(
+            "lg:hidden p-2.5 transition-colors shrink-0",
+            isTransparent
+              ? "text-white/70 hover:text-white"
+              : "text-foreground hover:text-[#C6A96B]",
+          )}
+          aria-label="Menu"
+        >
+          {mobileOpen ? (
+            <X className="h-5 w-5" strokeWidth={1.5} />
+          ) : (
+            <Menu className="h-5 w-5" strokeWidth={1.5} />
+          )}
+        </button>
+
+        {/* Center: Logo */}
+        <Link
+          to="/"
+          className="flex items-baseline gap-2.5 group shrink-0 absolute left-1/2 -translate-x-1/2 md:relative md:left-auto md:translate-x-0"
+        >
           <span
             className={cn(
               "font-display text-2xl md:text-[26px] leading-none tracking-tight transition-colors duration-300",
               isTransparent ? "text-white" : "text-foreground",
             )}
           >
-            <img src="/assets/logo.png" alt="Logo" className="h-[100px] w-auto" />
-            {/* {APP_NAME.split(" ")[0]}
-            <span className="text-[#C6A96B] italic"> {APP_NAME.split(" ")[1]}</span> */}
+            <img
+              src="/assets/logo.png"
+              alt="Logo"
+              className="h-[50px] md:h-[60px] w-auto"
+            />
           </span>
         </Link>
 
-        {/* Desktop nav */}
-        <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
+        {/* Desktop nav (center) */}
+        <nav className="hidden lg:flex items-center gap-6 xl:gap-8 flex-1 justify-center ml-12">
           {NAV_LINKS.map((l) => {
             if (l.label === "Collections") {
               return (
@@ -104,7 +128,7 @@ export default function Navbar() {
                     onMouseEnter={() => setCollectionsOpen(true)}
                     onMouseLeave={() => setCollectionsOpen(false)}
                     className={cn(
-                      "absolute top-full left-1/2 -translate-x-1/2 mt-5 w-[480px]",
+                      "absolute top-full left-1/2 -translate-x-1/2 mt-5 w-[520px]",
                       "bg-[#F5EFE6] dark:bg-[#141210] border border-[#C6A96B]/20",
                       "shadow-[0_24px_64px_-12px_rgba(15,10,0,0.25)]",
                       "transition-all duration-300 origin-top",
@@ -113,9 +137,26 @@ export default function Navbar() {
                         : "opacity-0 scale-y-95 pointer-events-none -translate-y-2",
                     )}
                   >
+                    {/* Search Bar */}
+                    <div className="px-6 pt-5 pb-4 border-b border-[#C6A96B]/15">
+                      <div className="relative">
+                        <Search
+                          className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-foreground/40"
+                          strokeWidth={1.5}
+                        />
+                        <input
+                          type="text"
+                          placeholder="Search disciplines..."
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                          className="w-full pl-9 pr-4 py-2 bg-[#EDE5D8] dark:bg-[#1C1714] border border-[#C6A96B]/20 rounded text-sm focus:outline-none focus:border-[#C6A96B]/50 transition-colors"
+                        />
+                      </div>
+                    </div>
+
                     {/* Header */}
-                    <div className="px-6 pt-5 pb-3 border-b border-[#C6A96B]/15 flex items-center justify-between">
-                      <span className="font-monotext-[11px] uppercase tracking-[0.2em] text-foreground/50">
+                    <div className="px-6 pt-4 pb-3 border-b border-[#C6A96B]/15 flex items-center justify-between">
+                      <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-foreground/50">
                         Three disciplines
                       </span>
                       <Link
@@ -169,7 +210,7 @@ export default function Navbar() {
                 to={l.to}
                 className={({ isActive }) =>
                   cn(
-                    "replace: font-mono text-xs uppercase tracking-[0.15em] transition-colors duration-300 relative group",
+                    "font-mono text-xs uppercase tracking-[0.15em] transition-colors duration-300 relative group",
                     isActive
                       ? "text-[#C6A96B]"
                       : isTransparent
@@ -196,21 +237,8 @@ export default function Navbar() {
           })}
         </nav>
 
-        {/* Right cluster */}
-        <div className="flex items-center gap-0.5">
-          <button
-            onClick={() => setSearch(true)}
-            aria-label="Search"
-            className={cn(
-              "p-2.5 transition-colors",
-              isTransparent
-                ? "text-white/70 hover:text-white"
-                : "hover:text-[#C6A96B]",
-            )}
-          >
-            <Search className="h-[17px] w-[17px]" strokeWidth={1.5} />
-          </button>
-
+        {/* Right: Theme Toggle & Enquiry */}
+        <div className="flex items-center gap-2 md:gap-3 shrink-0 ml-auto lg:ml-0">
           <button
             onClick={toggle}
             aria-label="Toggle theme"
@@ -218,7 +246,7 @@ export default function Navbar() {
               "p-2.5 transition-colors",
               isTransparent
                 ? "text-white/70 hover:text-white"
-                : "hover:text-[#C6A96B]",
+                : "text-foreground hover:text-[#C6A96B]",
             )}
           >
             {theme === "dark" ? (
@@ -231,7 +259,7 @@ export default function Navbar() {
           <Link
             to="/enquiry"
             className={cn(
-              "hidden md:inline-flex ml-3 items-center font-mono text-xs uppercase tracking-[0.15em] px-5 py-2.5 transition-all duration-300",
+              "hidden md:inline-flex ml-2 items-center font-mono text-xs uppercase tracking-[0.15em] px-5 py-2.5 transition-all duration-300",
               isTransparent
                 ? "border border-white/30 text-white hover:bg-[#C6A96B] hover:border-[#C6A96B] hover:text-[#0F0F0F]"
                 : "border border-foreground/40 text-foreground hover:bg-foreground hover:text-background",
@@ -239,21 +267,6 @@ export default function Navbar() {
           >
             Enquire
           </Link>
-
-          <button
-            onClick={() => setMobileOpen((v) => !v)}
-            className={cn(
-              "lg:hidden p-2.5 transition-colors",
-              isTransparent ? "text-white/70 hover:text-white" : "",
-            )}
-            aria-label="Menu"
-          >
-            {mobileOpen ? (
-              <X className="h-5 w-5" strokeWidth={1.5} />
-            ) : (
-              <Menu className="h-5 w-5" strokeWidth={1.5} />
-            )}
-          </button>
         </div>
       </div>
 
@@ -269,9 +282,26 @@ export default function Navbar() {
             if (l.label === "Collections") {
               return (
                 <div key={l.to} className="border-b border-[#C6A96B]/15">
+                  {/* Mobile Search */}
+                  <div className="px-4 py-4">
+                    <div className="relative">
+                      <Search
+                        className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-foreground/40"
+                        strokeWidth={1.5}
+                      />
+                      <input
+                        type="text"
+                        placeholder="Search..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="w-full pl-9 pr-4 py-2 bg-[#EDE5D8] dark:bg-[#1C1714] border border-[#C6A96B]/20 rounded text-sm focus:outline-none focus:border-[#C6A96B]/50 transition-colors"
+                      />
+                    </div>
+                  </div>
+
                   <button
                     onClick={() => setMobileCollectionsOpen((v) => !v)}
-                    className="w-full flex items-baseline justify-between py-5 group text-foreground"
+                    className="w-full flex items-baseline justify-between px-4 py-5 group text-foreground"
                   >
                     <span className="font-display text-3xl">Collections</span>
                     <div className="flex items-center gap-3">
@@ -323,7 +353,7 @@ export default function Navbar() {
                 to={l.to}
                 className={({ isActive }) =>
                   cn(
-                    "flex items-baseline justify-between border-b border-[#C6A96B]/15 py-5 group",
+                    "flex items-baseline justify-between border-b border-[#C6A96B]/15 px-4 py-5 group",
                     isActive ? "text-[#C6A96B]" : "text-foreground",
                   )
                 }
@@ -338,7 +368,7 @@ export default function Navbar() {
 
           <Link
             to="/enquiry"
-            className="mt-7 inline-flex items-center justify-center font-mono text-xs uppercase tracking-[0.2em] border border-[#C6A96B]/50 text-[#C6A96B] px-5 py-3.5 hover:bg-[#C6A96B] hover:text-[#0F0F0F] transition-colors"
+            className="mt-7 mx-4 inline-flex items-center justify-center font-mono text-xs uppercase tracking-[0.2em] border border-[#C6A96B]/50 text-[#C6A96B] px-5 py-3.5 hover:bg-[#C6A96B] hover:text-[#0F0F0F] transition-colors"
           >
             Submit an Enquiry
           </Link>
