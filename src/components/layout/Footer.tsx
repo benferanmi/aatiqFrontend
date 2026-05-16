@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Instagram, Facebook, Twitter, Linkedin, Youtube } from "lucide-react";
 import { useSiteSettings } from "@/hooks/useApi";
+import { SiTiktok } from "react-icons/si";
 import { APP_NAME } from "@/lib/constants";
 
 const ICONS: Record<string, typeof Instagram> = {
@@ -10,6 +11,12 @@ const ICONS: Record<string, typeof Instagram> = {
   linkedin: Linkedin,
   youtube: Youtube,
 };
+
+const socialLinks = [
+  { icon: Instagram, url: "https://www.instagram.com/aatiqart?igsh=NTc4MTIwNjQ2YQ==" },
+  { icon: Facebook, url: "" },
+  { icon: SiTiktok, url: "https://www.tiktok.com/@attiqart?_r=1&_t=ZT-96NzRxIfjNF" },
+].filter((link) => link.url);
 
 export default function Footer() {
   const { data: settings } = useSiteSettings();
@@ -34,22 +41,17 @@ export default function Footer() {
               belong.
             </p>
             <div className="mt-6 flex items-center gap-1">
-              {settings?.socialLinks?.map((s) => {
-                const Icon = ICONS[s.platform];
-                if (!Icon) return null;
-                return (
-                  <a
-                    key={s.platform}
-                    href={s.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={s.platform}
-                    className="p-2 hover:text-gold transition-colors"
-                  >
-                    <Icon className="h-4 w-4" strokeWidth={1.5} />
-                  </a>
-                );
-              })}
+              {socialLinks.map((link, i) => (
+                <a
+                  key={i}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 rounded-full bg-cream/10 flex items-center justify-center hover:bg-primary transition-colors"
+                >
+                  <link.icon className="w-4 h-4" />
+                </a>
+              ))}
             </div>
           </div>
 
@@ -113,7 +115,7 @@ export default function Footer() {
           </div>
 
           {/* Visit */}
-          <div className="col-span-2 md:col-span-3">
+          {/* <div className="col-span-2 md:col-span-3">
             <p className="eyebrow mb-5">Visit by appointment</p>
             {settings && (
               <address className="not-italic text-sm leading-relaxed text-muted-foreground space-y-1">
@@ -139,7 +141,7 @@ export default function Footer() {
                 </div>
               </address>
             )}
-          </div>
+          </div> */}
         </div>
 
         <div className="hairline mt-16 mb-6" />
@@ -147,7 +149,7 @@ export default function Footer() {
           <p>
             © {year} {APP_NAME} — All rights reserved
           </p>
-          <p>Curated in United States · Shipped worldwide</p>
+          <p>Curated in Dubai UAE </p>
         </div>
       </div>
     </footer>

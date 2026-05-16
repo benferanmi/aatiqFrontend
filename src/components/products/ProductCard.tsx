@@ -9,18 +9,6 @@ interface Props {
   index?: number;
 }
 
-/**
- * ProductCard component with museum-quality image presentation
- *
- * Brand system requirements:
- * - Consistent 4:5 aspect ratio
- * - object-fit: contain (preserve aspect ratios)
- * - Consistent background color (#EFE7DD per brand)
- * - Padding inside image container
- * - Subtle hover effects
- *
- * CRITICAL: All cards use same background tone for visual consistency
- */
 export default function ProductCard({
   product,
   size = "default",
@@ -95,9 +83,11 @@ export default function ProductCard({
         </div>
 
         {/* Price — right aligned */}
-        <p className="font-mono text-xs whitespace-nowrap pt-1 text-gold font-semibold">
-          {formatPrice(product.price)}
-        </p>
+        {product.price && (
+          <p className="font-mono text-xs whitespace-nowrap pt-1 text-gold font-semibold">
+            {formatPrice(product.price)}
+          </p>
+        )}
       </div>
     </Link>
   );

@@ -24,13 +24,13 @@ export default function Contact() {
     <>
       <Seo
         title="Contact"
-        description="Visit the atelier in United States — by appointment, by enquiry."
+        description="Visit the atelier in Dubai UAE — by appointment, by enquiry."
       />
 
       <div className="container pt-28 md:pt-36">
         <Breadcrumbs items={[{ label: "Contact" }]} />
         <div className="mt-6">
-          <p className="eyebrow-gold mb-3">Atelier · United States</p>
+          <p className="eyebrow-gold mb-3">Aatiq · Dubai UAE</p>
           <h1 className="font-display text-5xl md:text-7xl leading-[0.95]">
             By appointment.
           </h1>
